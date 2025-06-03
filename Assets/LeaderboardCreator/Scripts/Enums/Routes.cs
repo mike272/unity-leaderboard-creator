@@ -11,6 +11,7 @@
         DeleteEntry,
         GetPersonalEntry,
         GetEntryCount,
-        Test
+        Test,
+        GetLeaderboard
     }
 }

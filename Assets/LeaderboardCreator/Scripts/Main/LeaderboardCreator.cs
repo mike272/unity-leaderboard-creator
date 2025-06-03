@@ -121,7 +121,7 @@ namespace Dan.Main
             var query = $"?publicKey={publicKey}&userGuid={UserGuid}";
             query += searchQuery.ChainQuery();
             
-            _behaviour.SendGetRequest(GetServerURL(Routes.Get, query), callback, errorCallback);
+            _behaviour.SendGetRequest(GetServerURL(Routes.GetLeaderboard, query), callback, errorCallback);
         }
 
         /// <summary>

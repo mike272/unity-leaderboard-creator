@@ -57,27 +57,27 @@ namespace LeaderboardCreatorEditor
 
         private static void CheckVersion()
         {
-            var request = UnityEngine.Networking.UnityWebRequest.Get("https://lcv2-server.danqzq.games/version");
-            var operation = request.SendWebRequest();
+            // var request = UnityEngine.Networking.UnityWebRequest.Get("https://lcv2-server.danqzq.games/version");
+            // var operation = request.SendWebRequest();
             Log("Checking for updates...");
-            operation.completed += _ =>
-            {
-                if (request.responseCode != 200) return;
-                var response = request.downloadHandler.text;
-                if (response == VERSION)
-                {
+            // operation.completed += _ =>
+            // {
+            //     if (request.responseCode != 200) return;
+            //     var response = request.downloadHandler.text;
+            //     if (response == VERSION)
+            //     {
                     Log("<color=green><b>Leaderboard Creator is up to date!</b></color>");
-                    return;
-                }
+                    // return;
+                // }
                 
-                Log("<color=red><b>There is a new version of Leaderboard Creator available!</b></color>");
+                // Log("<color=red><b>There is a new version of Leaderboard Creator available!</b></color>");
                 
-                var dialog = EditorUtility.DisplayDialog("Leaderboard Creator", 
-                    "There is a new version of Leaderboard Creator available. Download it now?", "Yes", "No");
-                if (!dialog) return;
+                // var dialog = EditorUtility.DisplayDialog("Leaderboard Creator", 
+                //     "There is a new version of Leaderboard Creator available. Download it now?", "Yes", "No");
+                // if (!dialog) return;
                 
-                Application.OpenURL(ITCH_PAGE_URL);
-            };
+                // Application.OpenURL(ITCH_PAGE_URL);
+            // };
         }
 
         private void OnBecameVisible()

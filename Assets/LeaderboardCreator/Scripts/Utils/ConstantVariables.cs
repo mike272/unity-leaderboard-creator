@@ -10,6 +10,7 @@ namespace Dan
         {
             return SERVER_URL + (route == Routes.Authorize ? "/authorize" :
                 route == Routes.Get ? "/get" :
+                route == Routes.GetLeaderboard ? "/leaderboard" :
                 route == Routes.Test ? "/test" :
                 route == Routes.Upload ? "/entry/upload" :
                 route == Routes.UpdateUsername ? "/entry/update-username" :
