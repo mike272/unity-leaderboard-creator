@@ -73,7 +73,13 @@ namespace Dan.Main
         /// Pings the server to check if a connection can be established.
         /// </summary>
         /// <param name="isOnline">If true, the server is online, else connection failed.</param>
-        public static void Ping(Action<bool> isOnline) => _behaviour.SendGetRequest(GetServerURL(), isOnline, null);
+        static void Ping(Action<bool> isOnline) => _behaviour.SendGetRequest(GetServerURL(), isOnline, null);
+
+        /// <summary>
+        /// Test endpoint for checking if the server is reachable.
+        /// </summary>
+        /// /// <param name="isOnline">If true, the server is online, else connection failed.</param>
+        static void Test(Action<bool> isOnline) => _behaviour.SendGetRequest(GetServerURL(Routes.Test), isOnline, null);
 
         /// <summary>
         /// Fetches a leaderboard with the given public key.

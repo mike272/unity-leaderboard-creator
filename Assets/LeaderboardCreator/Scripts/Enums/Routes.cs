@@ -10,6 +10,7 @@
         UpdateUsername,
         DeleteEntry,
         GetPersonalEntry,
-        GetEntryCount
+        GetEntryCount,
+        Test
     }
 }
