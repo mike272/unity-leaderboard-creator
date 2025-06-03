@@ -17,6 +17,6 @@ namespace Dan
                 route == Routes.GetEntryCount ? "/entry/count" : "/") + extra;
         }
 
-        private const string SERVER_URL = "https://lcv2-server.danqzq.games";
+        private const string SERVER_URL = "https://fp5xe1hop3.execute-api.us-east-1.amazonaws.com/production";
     }
 }
