@@ -187,11 +187,11 @@ namespace Dan.Main
                 return;
             }
             
-            if (string.IsNullOrEmpty(UserGuid))
-            {
-                LogError("User GUID is null or empty! Please authorize the user before uploading an entry.");
-                return;
-            }
+            // if (string.IsNullOrEmpty(UserGuid))
+            // {
+            //     LogError("User GUID is null or empty! Please authorize the user before uploading an entry.");
+            //     return;
+            // }
 
             callback += isSuccessful =>
             {
@@ -205,8 +205,7 @@ namespace Dan.Main
                 Requests.Field(FORM_PUBLIC_KEY, publicKey),
                 Requests.Field(FORM_USERNAME, username),
                 Requests.Field(FORM_SCORE, score.ToString()),
-                Requests.Field(FORM_EXTRA, extra),
-                Requests.Field(FORM_USER_GUID, UserGuid)), callback, errorCallback);
+                Requests.Field(FORM_EXTRA, extra)), callback, errorCallback);
         }
 
         [Obsolete("This function is deprecated and will be removed in the future.")]
