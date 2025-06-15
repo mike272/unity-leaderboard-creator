@@ -136,6 +136,22 @@ namespace Dan.Main
             var request = UnityWebRequest.Post(url, form);
             StartCoroutine(HandleRequest(request, callback, errorCallback));
         }
+
+        // internal void SendPlainPostRequest(string url, List<IMultipartFormSection> form, Action<bool> callback = null, Action<string> errorCallback = null)
+        // {
+        //     var request = UnityWebRequest.Post(url, form);
+        //     StartCoroutine(HandleRequest(request, callback, errorCallback));
+        // }
+        
+        internal void SendPlainPostRequest(string url, string jsonData, Action<bool> callback = null, Action<string> errorCallback = null)
+        {
+            var request = new UnityWebRequest(url, "POST");
+            byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonData);
+            request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
+            StartCoroutine(HandleRequest(request, callback, errorCallback));
+        }
         
 #if UNITY_ANDROID
         private class ForceAcceptAll : CertificateHandler

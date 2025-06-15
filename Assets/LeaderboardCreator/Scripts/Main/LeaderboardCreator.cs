@@ -201,48 +201,19 @@ namespace Dan.Main
                     Log("Successfully uploaded entry data to leaderboard!");
             };
             
-            _behaviour.SendPostRequest(GetServerURL(Routes.Upload), Requests.Form(
-                Requests.Field(FORM_PUBLIC_KEY, publicKey),
-                Requests.Field(FORM_USERNAME, username),
-                Requests.Field(FORM_SCORE, score.ToString()),
-                Requests.Field(FORM_EXTRA, extra)), callback, errorCallback);
+            var entryData = new Models.EntryData(
+                publicKey,
+                username, 
+                score.ToString(), 
+                extra,
+                UserGuid
+            );
+            
+            // Serialize to JSON and send
+            string jsonData = JsonUtility.ToJson(entryData);
+            _behaviour.SendPlainPostRequest(GetServerURL(Routes.Upload), jsonData, callback, errorCallback);
         }
 
-        [Obsolete("This function is deprecated and will be removed in the future.")]
-        public static void UpdateEntryUsername(string publicKey, string username, Action<bool> callback = null, Action<string> errorCallback = null)
-        {
-            if (string.IsNullOrEmpty(publicKey))
-            {
-                LogError("Public key cannot be null or empty!");
-                return;
-            }
-            
-            if (string.IsNullOrEmpty(username))
-            {
-                LogError("Username cannot be null or empty!");
-                return;
-            }
-            
-            if (username.Length > 127)
-            {
-                LogError("Username cannot be longer than 127 characters!");
-                return;
-            }
-            
-            callback += isSuccessful =>
-            {
-                if (!isSuccessful)
-                    LogError("Updating entry's username failed!");
-                else
-                    Log("Successfully updated player's username!");
-            };
-            
-            _behaviour.SendPostRequest(GetServerURL(Routes.UpdateUsername), Requests.Form(
-                Requests.Field(FORM_PUBLIC_KEY, publicKey),
-                Requests.Field(FORM_USERNAME, username),
-                Requests.Field(FORM_USER_GUID, UserGuid)), callback, errorCallback);
-        }
-        
         /// <summary>
         /// Deletes the entry in a leaderboard, with the given public key.
         /// </summary>
