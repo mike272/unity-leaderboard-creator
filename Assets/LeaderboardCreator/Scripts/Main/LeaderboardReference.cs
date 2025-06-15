@@ -39,6 +39,6 @@ namespace Dan.Main
         public void ResetPlayer(Action onReset = null) => LeaderboardCreator.ResetPlayer(onReset);
 
         public void TestConnection(Action<bool> callback = null, Action<string> errorCallback = null)=>
-            LeaderboardCreator.Test();
+            LeaderboardCreator.Test(callback);
     }
 }

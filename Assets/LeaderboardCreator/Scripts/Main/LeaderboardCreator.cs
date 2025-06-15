@@ -79,7 +79,7 @@ namespace Dan.Main
         /// Test endpoint for checking if the server is reachable.
         /// </summary>
         /// /// <param name="isOnline">If true, the server is online, else connection failed.</param>
-        static void Test(Action<bool> isOnline) => _behaviour.SendGetRequest(GetServerURL(Routes.Test), isOnline, null);
+        public static void Test(Action<bool> isOnline) => _behaviour.SendGetRequest(GetServerURL(Routes.Test), isOnline, null);
 
         /// <summary>
         /// Fetches a leaderboard with the given public key.
