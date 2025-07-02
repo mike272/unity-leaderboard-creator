@@ -1,5 +1,4 @@
 using UnityEngine;
-using Dan.Main;
 
 namespace Dan.Main
 {
