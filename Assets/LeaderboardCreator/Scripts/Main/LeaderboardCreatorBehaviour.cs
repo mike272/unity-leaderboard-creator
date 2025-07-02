@@ -134,6 +134,13 @@ namespace Dan.Main
         internal void SendPostRequest(string url, List<IMultipartFormSection> form, Action<bool> callback = null, Action<string> errorCallback = null)
         {
             var request = UnityWebRequest.Post(url, form);
+            
+            // Add Bearer token if available from React frontend
+            if (LeaderboardController.IsAuthenticated)
+            {
+                request.SetRequestHeader("Authorization", $"Bearer {LeaderboardController.Token}");
+            }
+            
             StartCoroutine(HandleRequest(request, callback, errorCallback));
         }
 
@@ -150,6 +157,13 @@ namespace Dan.Main
             request.uploadHandler = new UploadHandlerRaw(bodyRaw);
             request.downloadHandler = new DownloadHandlerBuffer();
             request.SetRequestHeader("Content-Type", "application/json");
+            
+            // Add Bearer token if available from React frontend
+            if (LeaderboardController.IsAuthenticated)
+            {
+                request.SetRequestHeader("Authorization", $"Bearer {LeaderboardController.Token}");
+            }
+            
             StartCoroutine(HandleRequest(request, callback, errorCallback));
         }
         

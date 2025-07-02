@@ -4,5 +4,8 @@ namespace Dan.Main
     {
         public static LeaderboardReference DemoSceneLeaderboard = new LeaderboardReference("980324f10e2f03fc0fd6a38a70f88123919a6aed35a4aea86211ad58b68db9c4");
         public static LeaderboardReference FlappyBraceLeaderboard = new LeaderboardReference("flappy_brace");
+        
+        // React-authenticated leaderboard that uses username as publicKey
+        public static ReactLeaderboardReference ReactLeaderboard = new ReactLeaderboardReference();
     }
 }

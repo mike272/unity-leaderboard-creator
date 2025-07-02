@@ -8,6 +8,7 @@ Current latest **stable** version of **Leaderboard Creator** is v2.81
 - [Importing Leaderboard Creator into your project](#importing-leaderboard-creator-into-your-project)
 - [Include this `using` statement in your script where you want to handle leaderboards](#include-this-using-statement-in-your-script-where-you-want-to-handle-leaderboards)
 - [Adding your leaderboard to your project](#adding-your-leaderboard-to-your-project)
+- [React Frontend Integration](#react-frontend-integration)
 - [Getting your leaderboard](#getting-your-leaderboard)
 - [Uploading and modifying leaderboard entries](#uploading-and-modifying-leaderboard-entries)
 - [Display entries](#display-entries)
@@ -66,10 +67,71 @@ To add your leaderboard to your project, follow these steps:
 
   ---
 
+## React Frontend Integration
+
+**NEW**: Leaderboard Creator now supports receiving user authentication data from React frontends via the React-Unity package.
+
+### How it works
+
+Your React frontend can send user data using:
+```javascript
+sendMessage("LeaderboardController", "SetUserData", `${username},${mode},${token}`);
+```
+
+Where:
+- `username` - The username to use as both display name and publicKey
+- `mode` - Either "wallet" or "email" 
+- `token` - The authentication bearer token
+
+### Using the authenticated user data
+
+Once authenticated, you can use simplified methods that automatically use the username as the publicKey:
+
+```c#
+// Upload a score using the authenticated user
+LeaderboardCreator.UploadNewEntry(1000, "extra data", 
+    success => Debug.Log($"Upload successful: {success}"),
+    error => Debug.LogError($"Upload failed: {error}")
+);
+
+// Get leaderboard for the authenticated user
+LeaderboardCreator.GetLeaderboard(
+    entries => Debug.Log($"Got {entries.Length} entries"),
+    error => Debug.LogError($"Failed to get leaderboard: {error}")
+);
+
+// Or use the ReactLeaderboardReference for convenient access
+var reactLeaderboard = Leaderboards.ReactLeaderboard;
+reactLeaderboard.UploadNewEntry(1000, success => Debug.Log($"Upload: {success}"));
+reactLeaderboard.GetEntries(entries => Debug.Log($"Entries: {entries.Length}"));
+```
+
+### Authentication requirements
+
+All React-authenticated methods require the user to be authenticated first. If not authenticated, they will return an error. Check authentication status with:
+```c#
+if (LeaderboardController.IsAuthenticated)
+{
+    // User is authenticated, can use React methods
+}
+```
+
+### HTTP Authentication
+
+When authenticated via React, all HTTP requests automatically include the bearer token:
+```
+Authorization: Bearer {token}
+```
+
+> [!NOTE]
+> See `REACT_INTEGRATION.md` for detailed documentation and examples.
+
+  ---
+
 ## Getting your leaderboard
 • To **get** the entries in your leaderboard, call this function:
 ```c#
-Leaderboards.YourLeaderboard.GetEntries(string publicKey, Action<Entry[]> callback, Action<string> errorCallback[optional])
+Leaderboards.YourLeaderboard.GetEntries(Action<Entry[]> callback, Action<string> errorCallback[optional])
 ```
 
 • If the function is called and the request is successful, the callback is called, an array of `Entry` objects is returned.
