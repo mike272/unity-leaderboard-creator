@@ -185,7 +185,7 @@ namespace Dan.Main
         /// <param name="callback">Returns entries of the leaderboard if the request was successful.</param>
         /// <param name="errorCallback">Returns an error message if the request failed.</param>
         public static void GetLeaderboard(Action<Entry[]> callback, Action<string> errorCallback = null) => 
-            GetLeaderboard(LeaderboardSearchQuery.Default, callback, errorCallback);
+            GetLeaderboard(false, LeaderboardSearchQuery.Default, callback, errorCallback);
 
         /// <summary>
         /// Gets the leaderboard using the authenticated username as publicKey (from React frontend).
