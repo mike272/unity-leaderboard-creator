@@ -26,6 +26,9 @@ namespace Dan.Main
             _behaviour = new GameObject("[LeaderboardCreator]").AddComponent<LeaderboardCreatorBehaviour>();
             UnityEngine.Object.DontDestroyOnLoad(_behaviour.gameObject);
 
+            // Also add the LeaderboardController for React message handling
+            _behaviour.gameObject.AddComponent<LeaderboardController>();
+
             if (LeaderboardCreatorBehaviour.Config.authSaveMode != AuthSaveMode.Unhandled)
                 _behaviour.Authorize(OnAuthorizationAttempted);
         }
@@ -147,6 +150,140 @@ namespace Dan.Main
             _behaviour.SendGetRequest(GetServerURL(Routes.Get, query), callback, errorCallback);
         }
         
+        /// <summary>
+        /// Uploads a new entry using the authenticated username as publicKey (from React frontend).
+        /// </summary>
+        /// <param name="score">The highscore of the player</param>
+        /// <param name="callback">Returns true if the request was successful.</param>
+        /// <param name="errorCallback">Returns an error message if the request failed.</param>
+        public static void UploadNewEntry(int score, Action<bool> callback = null, Action<string> errorCallback = null) => 
+            UploadNewEntry(score, " ", callback, errorCallback);
+
+        /// <summary>
+        /// Uploads a new entry using the authenticated username as publicKey (from React frontend).
+        /// </summary>
+        /// <param name="score">The highscore of the player</param>
+        /// <param name="extra">Extra data to be stored with the entry (max length of 100, unless using an advanced leaderboard)</param>
+        /// <param name="callback">Returns true if the request was successful.</param>
+        /// <param name="errorCallback">Returns an error message if the request failed.</param>
+        public static void UploadNewEntry(int score, string extra, Action<bool> callback = null, Action<string> errorCallback = null)
+        {
+            if (!LeaderboardController.IsAuthenticated)
+            {
+                LogError("User not authenticated via React frontend. Call SetUserData first.");
+                errorCallback?.Invoke("User not authenticated");
+                return;
+            }
+
+            // Use the username from React as both publicKey and username
+            UploadNewEntry(LeaderboardController.Username, LeaderboardController.Username, score, extra, callback, errorCallback);
+        }
+
+        /// <summary>
+        /// Gets the leaderboard using the authenticated username as publicKey (from React frontend).
+        /// </summary>
+        /// <param name="callback">Returns entries of the leaderboard if the request was successful.</param>
+        /// <param name="errorCallback">Returns an error message if the request failed.</param>
+        public static void GetLeaderboard(Action<Entry[]> callback, Action<string> errorCallback = null) => 
+            GetLeaderboard(LeaderboardSearchQuery.Default, callback, errorCallback);
+
+        /// <summary>
+        /// Gets the leaderboard using the authenticated username as publicKey (from React frontend).
+        /// </summary>
+        /// <param name="isInAscendingOrder">If true, the leaderboard will be sorted in ascending order.</param>
+        /// <param name="callback">Returns entries of the leaderboard if the request was successful.</param>
+        /// <param name="errorCallback">Returns an error message if the request failed.</param>
+        public static void GetLeaderboard(bool isInAscendingOrder, Action<Entry[]> callback, Action<string> errorCallback = null) => 
+            GetLeaderboard(isInAscendingOrder, LeaderboardSearchQuery.Default, callback, errorCallback);
+        
+        /// <summary>
+        /// Gets the leaderboard using the authenticated username as publicKey (from React frontend).
+        /// </summary>
+        /// <param name="searchQuery">A struct with additional search parameters for filtering entries.</param>
+        /// <param name="callback">Returns entries of the leaderboard if the request was successful.</param>
+        /// <param name="errorCallback">Returns an error message if the request failed.</param>
+        public static void GetLeaderboard(LeaderboardSearchQuery searchQuery, Action<Entry[]> callback, Action<string> errorCallback = null)
+        {
+            if (!LeaderboardController.IsAuthenticated)
+            {
+                LogError("User not authenticated via React frontend. Call SetUserData first.");
+                errorCallback?.Invoke("User not authenticated");
+                return;
+            }
+
+            GetLeaderboard(LeaderboardController.Username, searchQuery, callback, errorCallback);
+        }
+
+        /// <summary>
+        /// Gets the leaderboard using the authenticated username as publicKey (from React frontend).
+        /// </summary>
+        /// <param name="isInAscendingOrder">If true, the leaderboard will be sorted in ascending order.</param>
+        /// <param name="searchQuery">A struct with additional search parameters for filtering entries.</param>
+        /// <param name="callback">Returns entries of the leaderboard if the request was successful.</param>
+        /// <param name="errorCallback">Returns an error message if the request failed.</param>
+        public static void GetLeaderboard(bool isInAscendingOrder, LeaderboardSearchQuery searchQuery, Action<Entry[]> callback, Action<string> errorCallback = null)
+        {
+            if (!LeaderboardController.IsAuthenticated)
+            {
+                LogError("User not authenticated via React frontend. Call SetUserData first.");
+                errorCallback?.Invoke("User not authenticated");
+                return;
+            }
+
+            GetLeaderboard(LeaderboardController.Username, isInAscendingOrder, searchQuery, callback, errorCallback);
+        }
+
+        /// <summary>
+        /// Gets the personal entry using the authenticated username as publicKey (from React frontend).
+        /// </summary>
+        /// <param name="callback">Returns the entry data if request is successful</param>
+        /// <param name="errorCallback">Returns an error message if the request failed.</param>
+        public static void GetPersonalEntry(Action<Entry> callback, Action<string> errorCallback = null)
+        {
+            if (!LeaderboardController.IsAuthenticated)
+            {
+                LogError("User not authenticated via React frontend. Call SetUserData first.");
+                errorCallback?.Invoke("User not authenticated");
+                return;
+            }
+
+            GetPersonalEntry(LeaderboardController.Username, callback, errorCallback);
+        }
+
+        /// <summary>
+        /// Gets the total number of entries using the authenticated username as publicKey (from React frontend).
+        /// </summary>
+        /// <param name="callback">Returns the total number of entries in the leaderboard.</param>
+        /// <param name="errorCallback">Returns an error message if the request failed.</param>
+        public static void GetEntryCount(Action<int> callback, Action<string> errorCallback = null)
+        {
+            if (!LeaderboardController.IsAuthenticated)
+            {
+                LogError("User not authenticated via React frontend. Call SetUserData first.");
+                errorCallback?.Invoke("User not authenticated");
+                return;
+            }
+
+            GetEntryCount(LeaderboardController.Username, callback, errorCallback);
+        }
+
+        /// <summary>
+        /// Deletes the entry using the authenticated username as publicKey (from React frontend).
+        /// </summary>
+        /// <param name="callback">Returns true if the request was successful.</param>
+        /// <param name="errorCallback">Returns an error message if the request failed.</param>
+        public static void DeleteEntry(Action<bool> callback = null, Action<string> errorCallback = null)
+        {
+            if (!LeaderboardController.IsAuthenticated)
+            {
+                LogError("User not authenticated via React frontend. Call SetUserData first.");
+                errorCallback?.Invoke("User not authenticated");
+                return;
+            }
+
+            DeleteEntry(LeaderboardController.Username, callback, errorCallback);
+        }
+
         /// <summary>
         /// Uploads a new entry to the leaderboard with the given public key.
         /// </summary>
